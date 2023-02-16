@@ -21,8 +21,8 @@ y = sg.sliders[6].value
 z = sg.sliders[7].value
 
 θ4 = Observable(π/2)
-θ3 = @lift(acos(($x^2+$y^2+($z-$L1)^2-$L2^2-$L3^2)/(2*$L2*$L3)))
-θ2 = @lift(atan($z-$L1,sqrt($x^2+$y^2))-atan(sin($θ3)*$L3,($L2+$L3*cos($θ3))))
+θ3 = @lift(acos((sqrt($x^2+$y^2-$L4)+($z-$L1)^2-$L2^2-$L3^2)/(2*$L2*$L3)))
+θ2 = @lift(atan($z-$L1,sqrt($x^2+$y^2)-$L4)-atan(sin($θ3)*$L3,($L2+$L3*cos($θ3))))
 θ1 = @lift(atan($y,$x))
 
 J2 = @lift(Point2(0,$L1))
