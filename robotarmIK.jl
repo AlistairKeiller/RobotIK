@@ -22,17 +22,17 @@ z = sg.sliders[6].value
 u = @lift(sqrt(($x)^2+($y)^2)-$L3) # asumes that the last bar is flat
 v = z
 θ1 = @lift(atan($x,$y))
-θ3 = @lift(acos((($u)^2+($v)^2-($L1)^2-($L2)^2)/(2*$L1*$L2)))
-θ2 = @lift(atan($u,$v)-atan($L1*sin($θ3)/($L1+$L2*cos($θ3))))
-θ4 = @lift(π/2-$θ2-$θ3)
+θ3 = @lift(-acos((($u)^2+($v)^2-($L1)^2-($L2)^2)/(2*$L1*$L2)))
+θ2 = @lift(atan($v,$u)-atan($L2*sin($θ3)/($L1+$L2*cos($θ3))))
+θ4 = @lift(-$θ2-$θ3)
 # θ4 = Observable(π/2)
 # θ3 = @lift(acos((sqrt($x^2+$y^2-$L4)+($z-$L1)^2-$L2^2-$L3^2)/(2*$L2*$L3)))
 # θ2 = @lift(atan($z-$L1,sqrt($x^2+$y^2)-$L4)-atan(sin($θ3)*$L3,($L2+$L3*cos($θ3))))
 # θ1 = @lift(atan($y,$x))
 
-P1 = @lift(Point2($L1*sin($θ2), $L1*cos($θ2)))
-P2 = @lift($P1 + Point2($L2*sin($θ2+$θ3), $L2*cos($θ2+$θ3)))
-P3 = @lift($P2 + Point2($L3*sin($θ2+$θ3+$θ4), $L3*cos($θ2+$θ3+$θ4)))
+P1 = @lift(Point2($L1*cos($θ2), $L1*sin($θ2)))
+P2 = @lift($P1 + Point2($L2*cos($θ2+$θ3), $L2*sin($θ2+$θ3)))
+P3 = @lift($P2 + Point2($L3*cos($θ2+$θ3+$θ4), $L3*sin($θ2+$θ3+$θ4)))
 
 to3(p) = @lift(Point3($p[1]*sin($θ1), $p[1]*cos($θ1), $p[2]))
 
