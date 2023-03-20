@@ -14,8 +14,8 @@ L2 = sg.sliders[2].value
 x = sg.sliders[3].value
 y = sg.sliders[4].value
 
-θ2 = @lift(-acos((($x)^2+($y)^2-($L1)^2-($L2)^2)/(2*$L1*$L2)))
-θ1 = @lift(atan($y,$x)-atan($L1*sin($θ2),$L1+$L2*cos($θ2)))
+θ2 = @lift(acos((($x)^2+($y)^2-($L1)^2-($L2)^2)/(2*$L1*$L2)))
+θ1 = @lift(atan($y,$x)+atan($L2*sin(-$θ2),$L1+$L2*cos(-$θ2)))
 
 Axis(f[1,1], limits=(-4,4,-4,4), aspect = 1)
 
