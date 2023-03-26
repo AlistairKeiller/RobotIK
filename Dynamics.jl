@@ -79,12 +79,6 @@ lagrange = simplify(kenetic-potential)
 # dynamics equation
 Symbolics.derivative(Symbolics.derivative(lagrange,θ_1′),t)
 
-# Symbolics.solve_for([
-#     Symbolics.derivative(lagrange,θ_3)~Symbolics.derivative(Symbolics.derivative(lagrange,θ_3′),t)
-#     ],[
-#         θ_3′′
-# ])
-
 Symbolics.solve_for([
     Symbolics.derivative(lagrange,θ_1)~Symbolics.derivative(Symbolics.derivative(lagrange,θ_1′),t),
     Symbolics.derivative(lagrange,θ_2)~Symbolics.derivative(Symbolics.derivative(lagrange,θ_2′),t),
@@ -96,7 +90,3 @@ Symbolics.solve_for([
         θ_3′′,
         θ_4′′
 ])
-
-Symbolics.solve_for([
-    Symbolics.derivative(lagrange,θ_4)~Symbolics.derivative(Symbolics.derivative(lagrange,θ_4′),t)
-    ],[θ_4′′])
