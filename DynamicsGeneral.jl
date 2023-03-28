@@ -13,24 +13,21 @@ for i ∈ 2:n
     push!(P, P[i-1]+[L[i-1]*sin(sum(Symbolics.scalarize(θ[2:i]))),L[i-1]*cos(sum(Symbolics.scalarize(θ[2:i])))])
 end
 
-total_point_potential = sum([g*m[i]*P[i][2] for i ∈ 1:n])
-total_line_potential = sum([g*m[i]*(P[i-1][2]+P[i][2])/2 for i ∈ 2:n])
-total_potential = total_point_potential + total_line_potential
+point_potential = sum(g*m[i]*P[i][2] for i ∈ 1:n)
+line_potential = sum(g*m[i]*(P[i-1][2]+P[i][2])/2 for i ∈ 2:n)
+potential = point_potential + line_potential
 
-total_kenetic_energy = 0
-for J ∈ 1:n-1
-    point_inertia = sum(m[i]*((P[i][1]-P[J][1])^2+(P[i][2]-P[J][2])^2) for i ∈ J+1:n)
-    line_inertia = sum(M[i]/3*((P[i][1]-P[J][1])^2+(P[i][1]-P[J][1])*(P[i+1][1]-P[J][1])+(P[i+1][1]-P[J][1])^2+(P[i][2]-P[J][2])^2+(P[i][2]-P[J][2])*(P[i+1][2]-P[J][2])+(P[i+1][2]-P[J][2])^2) for i ∈ J:n-1)
-    inertia = point_inertia + line_inertia
-    kenetic_energy = 1/2*inertia*θ′[J+1]^2
-    total_kenetic_energy += kenetic_energy
-end
-point_inertia = sum(m[i]*P[i][1]^2 for i ∈ 1:n)
-line_inertia = sum(M[i]/3*(P[i][1]^2+P[i][1]*P[i+1][1]+P[i+1][1]^2) for i ∈ 1:n-1)
-inertia = point_inertia + line_inertia
-kenetic_energy = 1/2*inertia*θ′[1]^2
-total_kenetic_energy += kenetic_energy
+point_inertias = [
+    [sum(m[i]*P[i][1]^2 for i ∈ 1:n)]; # rotating base point inertia
+    [sum(m[i]*((P[i][1]-P[J][1])^2+(P[i][2]-P[J][2])^2) for i ∈ J+1:n) for J ∈ 1:n-1] # joint point inertias
+    ]
+line_inertias = [
+    [sum(M[i]/3*(P[i][1]^2+P[i][1]*P[i+1][1]+P[i+1][1]^2) for i ∈ 1:n-1)]; # rotating base line inertia
+    [sum(M[i]/3*((P[i][1]-P[J][1])^2+(P[i][1]-P[J][1])*(P[i+1][1]-P[J][1])+(P[i+1][1]-P[J][1])^2+(P[i][2]-P[J][2])^2+(P[i][2]-P[J][2])*(P[i+1][2]-P[J][2])+(P[i+1][2]-P[J][2])^2) for i ∈ J:n-1) for J ∈ 1:n-1] # joint line inertias
+    ]
+inertias = point_inertias+line_inertias
+kenetic_energy = sum(1/2*inertias[i]*θ′[i]^2 for i ∈ 1:n)
 
-lagrange = total_kenetic_energy - total_potential
+lagrange = kenetic_energy - potential
 
 Symbolics.solve_for([Symbolics.derivative(lagrange,θ[i])~Symbolics.derivative(Symbolics.derivative(lagrange,θ′[i]),t) for i ∈ 1:n],θ′′)
