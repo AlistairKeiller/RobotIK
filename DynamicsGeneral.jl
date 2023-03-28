@@ -2,7 +2,7 @@ using Symbolics, LinearAlgebra
 
 n = 4
 
-@variables g, t, L[1:n], M[1:n-1], m[1:n], θ(t)[1:n]
+@variables g, t, L[1:n], M[1:n-1], m[1:n], θ(t)[1:n], τ[1:n]
 
 θ′=Symbolics.derivative(Symbolics.scalarize(θ),t)
 θ′′=Symbolics.derivative(Symbolics.scalarize(θ′),t)
@@ -25,3 +25,8 @@ for J ∈ 1:n-1
     kenetic_energy = 1/2*inertia*θ′[J+1]^2
     total_kenetic_energy += kenetic_energy
 end
+point_inertia = sum(m[i]*P[i][1]^2 for i ∈ 1:n)
+line_inertia = sum(M[i]/3*(P[i][1]^2+P[i][1]*P[i+1][1]+P[i+1][1]^2) for i ∈ 1:n-1)
+inertia = point_inertia + line_inertia
+kenetic_energy = 1/2*inertia*θ′[1]^2
+total_kenetic_energy += kenetic_energy
