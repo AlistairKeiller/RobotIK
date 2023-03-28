@@ -1,4 +1,4 @@
-using Symbolics, LinearAlgebra
+using Symbolics
 
 n = 4
 
@@ -15,7 +15,7 @@ end
 
 total_point_potential = sum([g*m[i]*P[i][2] for i ∈ 1:n])
 total_line_potential = sum([g*m[i]*(P[i-1][2]+P[i][2])/2 for i ∈ 2:n])
-total_potential = point_potential + line_potential
+total_potential = total_point_potential + total_line_potential
 
 total_kenetic_energy = 0
 for J ∈ 1:n-1
@@ -30,3 +30,7 @@ line_inertia = sum(M[i]/3*(P[i][1]^2+P[i][1]*P[i+1][1]+P[i+1][1]^2) for i ∈ 1:
 inertia = point_inertia + line_inertia
 kenetic_energy = 1/2*inertia*θ′[1]^2
 total_kenetic_energy += kenetic_energy
+
+lagrange = total_kenetic_energy - total_potential
+
+Symbolics.solve_for([Symbolics.derivative(lagrange,θ[i])~Symbolics.derivative(Symbolics.derivative(lagrange,θ′[i]),t) for i ∈ 1:n],θ′′)
