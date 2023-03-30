@@ -33,5 +33,14 @@ lagrange = kenetic_energy - potential
 α = simplify(Symbolics.solve_for([Symbolics.derivative(lagrange,θ[i])~Symbolics.derivative(Symbolics.derivative(lagrange,θ′[i]),t) for i ∈ 1:n],θ′′) + # angular acceleration from gravity
     [τ[i]/inertias[i] for i ∈ 1:n]) # angular acceleration from motors
 
-Symbolics.jacobian([θ′;α], [Symbolics.scalarize(θ);θ′])
-Symbolics.jacobian([θ′;α], Symbolics.scalarize(τ))
+A = Symbolics.jacobian([θ′;α], [Symbolics.scalarize(θ);θ′])
+B = Symbolics.jacobian([θ′;α], Symbolics.scalarize(τ))
+
+AInCCode = build_function(A, θ, θ′, τ, L, M, m, g, target=Symbolics.CTarget())
+BInCCode = build_function(B, θ, θ′, τ, L, M, m, g, target=Symbolics.CTarget())
+
+AInCCode = replace(AInCCode, "//" => "/")
+BInCCode = replace(BInCCode, "//" => "/")
+
+write("A.h", AInCCode)
+write("B.h", BInCCode)
