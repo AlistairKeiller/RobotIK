@@ -2,7 +2,7 @@ using Symbolics
 
 n = 4
 
-@variables g, t, L[1:n], M[1:n-1], m[1:n], θ(t)[1:n], τ[1:n]
+@variables g, t, L[1:n], M[1:n-1], m[1:n], θ(t)[1:n], ω[1:n], τ[1:n]
 
 θ′=Symbolics.derivative(Symbolics.scalarize(θ),t)
 θ′′=Symbolics.derivative(Symbolics.scalarize(θ′),t)
@@ -36,8 +36,8 @@ lagrange = kenetic_energy - potential
 A = Symbolics.jacobian([θ′;α], [Symbolics.scalarize(θ);θ′])
 B = Symbolics.jacobian([θ′;α], Symbolics.scalarize(τ))
 
-AInCCode = build_function(A, θ, θ′, τ, L, M, m, g, target=Symbolics.CTarget())
-BInCCode = build_function(B, θ, θ′, τ, L, M, m, g, target=Symbolics.CTarget())
+AInCCode = build_function(Symbolics.substitute(A, Dict([θ′[i] => ω[i] for i ∈ 1:n])), θ, ω, τ, L, M, m, g, target=Symbolics.CTarget())
+BInCCode = build_function(Symbolics.substitute(B, Dict([θ′[i] => ω[i] for i ∈ 1:n])), θ, ω, τ, L, M, m, g, target=Symbolics.CTarget())
 
 AInCCode = replace(AInCCode, "//" => "/")
 BInCCode = replace(BInCCode, "//" => "/")
