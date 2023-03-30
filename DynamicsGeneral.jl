@@ -43,8 +43,8 @@ B = Symbolics.jacobian([θ′;α], Symbolics.scalarize(τ))
 AInCCode = build_function(Symbolics.substitute(A, Dict([θ′[i] => ω[i] for i ∈ 1:n])), θ..., ω..., τ..., target=Symbolics.CTarget())
 BInCCode = build_function(Symbolics.substitute(B, Dict([θ′[i] => ω[i] for i ∈ 1:n])), θ..., ω..., τ..., target=Symbolics.CTarget())
 
-AInCCode = replace(AInCCode, "//" => "/")
-BInCCode = replace(BInCCode, "//" => "/")
+AInCCode = replace(AInCCode, "//" => "/", "diffeqf" => "A")
+BInCCode = replace(BInCCode, "//" => "/", "diffeqf" => "B")
 
 write("A.h", AInCCode)
 write("B.h", BInCCode)

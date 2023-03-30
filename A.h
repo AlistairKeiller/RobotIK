@@ -1,5 +1,5 @@
 #include <math.h>
-void diffeqf(double* du, const double RHS1, const double RHS2, const double RHS3, const double RHS4, const double RHS5, const double RHS6, const double RHS7, const double RHS8, const double RHS9, const double RHS10, const double RHS11, const double RHS12) {
+void A(double* du, const double RHS1, const double RHS2, const double RHS3, const double RHS4, const double RHS5, const double RHS6, const double RHS7, const double RHS8, const double RHS9, const double RHS10, const double RHS11, const double RHS12) {
   du[0] = 0;
   du[1] = 0;
   du[2] = 0;
