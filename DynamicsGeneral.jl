@@ -32,3 +32,6 @@ lagrange = kenetic_energy - potential
 
 α = simplify(Symbolics.solve_for([Symbolics.derivative(lagrange,θ[i])~Symbolics.derivative(Symbolics.derivative(lagrange,θ′[i]),t) for i ∈ 1:n],θ′′) + # angular acceleration from gravity
     [τ[i]/inertias[i] for i ∈ 1:n]) # angular acceleration from motors
+
+Symbolics.jacobian([θ′;α], [Symbolics.scalarize(θ);θ′])
+Symbolics.jacobian([θ′;α], Symbolics.scalarize(τ))
