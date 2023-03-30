@@ -40,8 +40,8 @@ lagrange = kenetic_energy - potential
 A = Symbolics.jacobian([θ′;α], [Symbolics.scalarize(θ);θ′])
 B = Symbolics.jacobian([θ′;α], Symbolics.scalarize(τ))
 
-AInCCode = build_function(Symbolics.substitute(A, Dict([θ′[i] => ω[i] for i ∈ 1:n])), θ, ω, τ, target=Symbolics.CTarget())
-BInCCode = build_function(Symbolics.substitute(B, Dict([θ′[i] => ω[i] for i ∈ 1:n])), θ, ω, τ, target=Symbolics.CTarget())
+AInCCode = build_function(Symbolics.substitute(A, Dict([θ′[i] => ω[i] for i ∈ 1:n])), θ..., ω..., τ..., target=Symbolics.CTarget())
+BInCCode = build_function(Symbolics.substitute(B, Dict([θ′[i] => ω[i] for i ∈ 1:n])), θ..., ω..., τ..., target=Symbolics.CTarget())
 
 AInCCode = replace(AInCCode, "//" => "/")
 BInCCode = replace(BInCCode, "//" => "/")
